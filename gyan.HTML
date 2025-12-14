@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 🎉</title>
+
+<style>
+body,html{
+    margin:0;padding:0;
+    height:100%;width:100%;
+    font-family:'Poppins',sans-serif;
+    overflow-x:hidden;
+}
+
+/* PAGE 1 */
+#page1{
+    height:100vh;
+    background: linear-gradient(135deg,#f8ff9a,#116aae);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+}
+
+#startBtn{
+    padding:15px 30px;
+    font-size:24px;
+    border:none;
+    border-radius:12px;
+    background:#230d7c;
+    color:white;
+    cursor:pointer;
+}
+
+/* PAGE 2 */
+#page2{
+    background: linear-gradient(135deg,#080808,#116aae);
+    min-height:100vh;
+    width:100%;
+    overflow:hidden;
+    display:none;
+    text-align:center;
+    padding:30px 0;
+    position:relative;
+}
+
+.title{
+    font-size:40px;
+    color:white;
+    text-shadow:2px 2px 10px black;
+}
+
+/* TYPEWRITER */
+#msg{
+    color:white;
+    font-size:24px;
+    width:80%;
+    margin:20px auto;
+    border-right:3px solid white;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+/* Slideshow - single frame */
+.slideshow{
+    width:400px;
+    height:300px;
+    margin:20px auto;
+    border-radius:15px;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 0 15px white;
+}
+.slideshow img{
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    object-fit:cover;
+    opacity:1;
+    transition:opacity 1s ease-in-out;
+}
+.slideshow img.active{
+    opacity:0;
+}
+.slideshow img.active1{
+    opacity:0;
+}
+
+
+/* Frame Image */
+.frame img{
+    width:220px;
+    height:220px;
+    border-radius:15px;
+    object-fit:cover;
+    box-shadow:0 0 10px white;
+}
+
+/* Hearts */
+.heart{
+    position:absolute;
+    font-size:25px;
+    color:pink;
+    animation:float 6s linear infinite;
+}
+@keyframes float{
+    from{transform:translateY(0);}
+    to{transform:translateY(-100vh);}
+}
+
+/* Stars */
+.star{
+    position:absolute;
+    width:7px;height:7px;
+    background:yellow;
+    border-radius:50%;
+    animation:fall 4s linear infinite;
+}
+@keyframes fall{
+    from{top:-10px;}
+    to{top:100vh;}
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1">
+    <h1>🎉 ❤️Surprise for You ❤️ 🎉</h1>
+    <button id="startBtn">Click to Start</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2">
+
+    <audio id="music" src="music.mp3" loop></audio>
+
+    <h1 class="title">🎂 Happy Birthday My Love ❤️🎂</h1>
+    <p id="msg"></p>
+
+    <div class="slideshow"> 
+        <img src="pic1.jpg" class="active">
+        <img src="pic5.jpg" class="active">
+        <img src="pic31.jpg" class="active">
+        <img src="pic4.jpg" class="active1">
+    
+    </div>
+
+    <div class="frame">
+        <img src="wish.png">
+    </div>
+</div>
+
+<script>
+/* PAGE SWITCH */
+document.getElementById("startBtn").onclick = function(){
+    document.getElementById("page1").style.display="none";
+    document.getElementById("page2").style.display="block";
+    startAll();
+};
+
+/* START EVERYTHING */
+function startAll(){
+    // Music
+    document.getElementById("music").play().catch(()=>{});
+
+    // Typewriter
+    const arr=[
+        "Dear Soulmate❤️, wishing you a very Happy Birthday! 🎉",
+        "May your day be filled with love and joy 💖",
+        "You are truly special—enjoy your day! 🥳",
+        "Like every day ,I'm thinking of you today but today a little more",
+        "I'm missing you so much and i hope I'm being missing too! Happy Birth day " ,
+       "to man who has the most gentle,caring and loving heart",
+        "It is your heart that makes me fall for you each day a little more!",
+        "Happy Wala Birthday MY❤️😍❤️"
+        
+
+        
+    ];
+    typeMessages(arr,0);
+
+    // Slideshow
+    startSlideshow();
+
+    // Hearts
+    setInterval(()=>{
+        const h=document.createElement("div");
+        h.className="heart";
+        h.innerHTML="❤️";
+        h.style.left=Math.random()*90+"%";
+        h.style.top="100vh";
+        document.getElementById("page2").appendChild(h);
+        setTimeout(()=>h.remove(),6000);
+    },500);
+
+    // Stars
+    setInterval(()=>{
+        const s=document.createElement("div");
+        s.className="star";
+        s.style.left=Math.random()*100+"%";
+        document.getElementById("page2").appendChild(s);
+        setTimeout(()=>s.remove(),4000);
+    },300);
+}
+
+/* TYPEWRITER */
+function typeMessages(arr,idx){
+    if(idx>=arr.length) return;
+    const t=document.getElementById("msg");
+    let i=0;
+    t.innerHTML="";
+    function type(){
+        if(i<arr[idx].length){
+            t.innerHTML+=arr[idx][i];
+            i++; setTimeout(type,40);
+        }else{
+            setTimeout(()=>typeMessages(arr,idx+1),1200);
+        }
+    }
+    type();
+}
+
+/* SLIDESHOW */
+function startSlideshow(){
+    const slides=document.querySelectorAll(".slideshow img");
+    let c=0;
+    setInterval(()=>{
+        slides.forEach((s,i)=>s.classList.remove('active'));
+        slides[c].classList.add('active');
+        c = (c + 1) % slides.length;
+    },3000);
+}
+</script>
+
+</body>
+</html>
